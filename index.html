@@ -19,10 +19,14 @@
   <button onclick="generateLUT()">Download LUT</button>
 
   <script>
+    function format(f) {
+      return parseFloat(f).toString();
+    }
+
     function generateLUT() {
-      const r = parseFloat(document.getElementById('r').value).toFixed(6);
-      const g = parseFloat(document.getElementById('g').value).toFixed(6);
-      const b = parseFloat(document.getElementById('b').value).toFixed(6);
+      const r = format(document.getElementById('r').value);
+      const g = format(document.getElementById('g').value);
+      const b = format(document.getElementById('b').value);
       const size = 33;
       let lines = [
         'TITLE "Fixed Color LUT"',
@@ -30,9 +34,9 @@
         'DOMAIN_MIN 0.0 0.0 0.0',
         'DOMAIN_MAX 1.0 1.0 1.0'
       ];
-      for (let i = 0; i < size * size * size; i++) {
-        lines.push(`${r} ${g} ${b}`);
-      }
+      const row = `${r} ${g} ${b}`;
+      for (let i = 0; i < size * size * size; i++) lines.push(row);
+
       const blob = new Blob([lines.join("\n")], { type: "text/plain" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
