@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fixed Color LUT Generator</title>
+<style>
+  body { font-family: sans-serif; text-align: center; margin-top: 2em; }
+  input { width: 4em; margin: 0.5em; }
+  button { margin-top: 1em; padding: 0.5em 1em; }
+</style>
+</head>
+<body>
+  <h2>Fixed Color LUT Generator</h2>
+  <div>
+    R: <input id="r" type="number" min="0" max="1" step="0.01" value="0.5">
+    G: <input id="g" type="number" min="0" max="1" step="0.01" value="1">
+    B: <input id="b" type="number" min="0" max="1" step="0.01" value="1">
+  </div>
+  <button onclick="generateLUT()">Download LUT</button>
+
+  <script>
+    function generateLUT() {
+      const r = parseFloat(document.getElementById('r').value).toFixed(6);
+      const g = parseFloat(document.getElementById('g').value).toFixed(6);
+      const b = parseFloat(document.getElementById('b').value).toFixed(6);
+      const size = 33;
+      let lines = [
+        'TITLE "Fixed Color LUT"',
+        'LUT_3D_SIZE ' + size,
+        'DOMAIN_MIN 0.0 0.0 0.0',
+        'DOMAIN_MAX 1.0 1.0 1.0'
+      ];
+      for (let i = 0; i < size * size * size; i++) {
+        lines.push(`${r} ${g} ${b}`);
+      }
+      const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `lut_${r}_${g}_${b}.cube`;
+      a.click();
+    }
+  </script>
+</body>
+</html>
